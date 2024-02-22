@@ -1,0 +1,32 @@
+---
+
+- name: Restart sshd
+  ansible.builtin.systemd:
+    name: sshd
+    daemon_reload: true
+    state: restarted
+  become: true
+
+- name: Restart iptables
+  ansible.builtin.systemd:
+    name: iptables
+    daemon_reload: true
+    state: restarted
+  become: true
+
+- name: Touch iptables save file
+  ansible.builtin.copy:
+    content: ""
+    dest: /etc/sysconfig/iptables
+    force: false
+    group: root
+    owner: root
+    mode: 0600
+  listen: "save iptables"
+  become: true
+
+- name: Save iptables config
+  ansible.builtin.shell: iptables-save > /etc/sysconfig/iptables
+  listen: "save iptables"
+  notify: Restart iptables
+  become: true

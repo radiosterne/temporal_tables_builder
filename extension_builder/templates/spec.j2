@@ -1,0 +1,46 @@
+%global _libdir /usr/pgsql-14/lib
+%global _sharedir /usr/pgsql-14/share
+Name:		temporal_tables
+Version:	1.2.2
+Release:	1
+Summary:	PostgreSQL temporal_tables Extension
+ 
+License:	BSD
+BuildArch:	x86_64
+
+Prefix: /usr/pgsql-14/lib
+Prefix: {{ postgresql_config_path }}
+ 
+%description
+Temporal Tables Extension for postgresql
+
+%install
+mkdir -p %{buildroot}%{_libdir}
+mkdir -p %{buildroot}%{_libdir}/bitcode
+cp %{_libdir}/%{name}.so %{buildroot}%{_libdir}
+cp -r %{_libdir}/bitcode/%{name} %{buildroot}/%{_libdir}/bitcode
+cp -r %{_libdir}/bitcode/%{name}.index.bc %{buildroot}%{_libdir}/bitcode/%{name}.index.bc
+mkdir -p %{buildroot}%{_sharedir}/extension
+cp %{_sharedir}/extension/temporal_tables--1.2.2.sql %{buildroot}%{_sharedir}/extension
+cp %{_sharedir}/extension/temporal_tables--1.0.0--1.0.1.sql %{buildroot}%{_sharedir}/extension
+cp %{_sharedir}/extension/temporal_tables--1.0.1--1.0.2.sql %{buildroot}%{_sharedir}/extension
+cp %{_sharedir}/extension/temporal_tables--1.0.2--1.1.0.sql %{buildroot}%{_sharedir}/extension
+cp %{_sharedir}/extension/temporal_tables--1.1.0--1.1.1.sql %{buildroot}%{_sharedir}/extension
+cp %{_sharedir}/extension/temporal_tables--1.1.1--1.2.0.sql %{buildroot}%{_sharedir}/extension
+cp %{_sharedir}/extension/temporal_tables--1.2.0--1.2.1.sql %{buildroot}%{_sharedir}/extension
+cp %{_sharedir}/extension/temporal_tables--1.2.1--1.2.2.sql %{buildroot}%{_sharedir}/extension
+cp %{_sharedir}/extension/temporal_tables.control %{buildroot}%{_sharedir}/extension
+
+ 
+ 
+%files
+%{_libdir}
+%{_sharedir}/extension/temporal_tables--1.2.2.sql
+%{_sharedir}/extension/temporal_tables--1.0.0--1.0.1.sql
+%{_sharedir}/extension/temporal_tables--1.0.1--1.0.2.sql
+%{_sharedir}/extension/temporal_tables--1.0.2--1.1.0.sql
+%{_sharedir}/extension/temporal_tables--1.1.0--1.1.1.sql
+%{_sharedir}/extension/temporal_tables--1.1.1--1.2.0.sql
+%{_sharedir}/extension/temporal_tables--1.2.0--1.2.1.sql
+%{_sharedir}/extension/temporal_tables--1.2.1--1.2.2.sql
+%{_sharedir}/extension/temporal_tables.control

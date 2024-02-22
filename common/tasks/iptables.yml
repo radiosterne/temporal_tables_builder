@@ -1,0 +1,57 @@
+- name: Install iptables-services
+  ansible.builtin.yum:
+    name: iptables-services
+  become: true
+
+- name: Temporarily allow all incoming in iptables
+  ansible.builtin.iptables:
+    chain: INPUT
+    policy: ACCEPT
+  become: true
+
+- name: Flush everything from iptables
+  ansible.builtin.iptables:
+    chain: INPUT
+    flush: true
+  become: true
+
+- name: Enable iptables
+  ansible.builtin.systemd:
+    state: started
+    enabled: true
+    name: iptables
+  become: true
+
+- name: Allow HTTP, HTTPS and SSH through iptables
+  ansible.builtin.iptables:
+    chain: INPUT
+    protocol: tcp
+    match: multiport
+    destination_port: http,https,ssh
+    jump: ACCEPT
+  notify: save iptables
+  become: true
+
+- name: Allow established connections to send packets through iptables
+  ansible.builtin.iptables:
+    chain: INPUT
+    match: state
+    ctstate: ESTABLISHED,RELATED
+    jump: ACCEPT
+  notify: save iptables
+  become: true
+
+- name: Allow any localhost connections through iptables
+  ansible.builtin.iptables:
+    chain: INPUT
+    source: localhost
+    jump: ACCEPT
+  notify: save iptables
+  become: true
+
+- name: Disallow anything else through iptables
+  ansible.builtin.iptables:
+    chain: INPUT
+    policy: DROP
+  notify: save iptables
+  become: true

@@ -1,0 +1,6 @@
+extension_version: 1.2.2
+extension_archive_name: temporal_tables-{{ extension_version }}.zip
+archive_download_directory: "{{ ansible_user_dir }}"
+source_directory: "{{ ansible_user_dir }}/temporal_tables-{{ extension_version }}"
+extension_archive_url: https://api.pgxn.org/dist/temporal_tables/{{ extension_version }}/{{ extension_archive_name }}
+extension_archive_path: "{{ archive_download_directory }}/{{ extension_archive_name }}"

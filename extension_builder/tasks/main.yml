@@ -1,0 +1,66 @@
+- name: Install unzip
+  ansible.builtin.yum:
+    name: unzip
+  become: true
+
+- name: Install gcc
+  ansible.builtin.yum:
+    name: devtoolset-8
+  become: true
+
+- name: Install rpmdevtools
+  ansible.builtin.yum:
+    name: rpmdevtools
+  become: true
+
+- name: Download extension distro
+  ansible.builtin.get_url:
+    dest: "{{ archive_download_directory }}"
+    url: "{{ extension_archive_url }}"
+
+- name: Remove sources directory
+  ansible.builtin.file:
+    path: "{{ source_directory }}"
+    state: absent
+
+- name: Create sources directory
+  ansible.builtin.file:
+    path: "{{ source_directory }}"
+    state: directory
+    mode: '0755'
+
+- name: Unarchive sources
+  ansible.builtin.unarchive:
+    src: "{{ extension_archive_path }}"
+    dest: "{{ archive_download_directory }}"
+    remote_src: yes
+
+- name: Run make
+  ansible.builtin.command: make
+  args:
+    chdir: "{{ source_directory }}"
+
+- name: Run make install
+  ansible.builtin.command: make install
+  args:
+    chdir: "{{ source_directory }}"
+  become: true
+  become_flags: -i
+
+- name: Run rpmdev-setuptree
+  ansible.builtin.command: rpmdev-setuptree
+
+- name: Copy spec file
+  ansible.builtin.template:
+    src: spec.j2
+    dest: "{{ ansible_user_dir }}/rpmbuild/SPECS/temporal_tables.spec"
+
+- name: Run rpmbuild
+  ansible.builtin.command: rpmbuild -bb {{ ansible_user_dir }}/rpmbuild/SPECS/temporal_tables.spec --define "_rpmdir {{ ansible_user_dir }}/rpmbuild/RPMS"
+  become: true
+
+- name: Copy built RPM package
+  ansible.builtin.fetch:
+    src: "{{ ansible_user_dir }}/rpmbuild/RPMS/x86_64/temporal_tables-1.2.2-1.x86_64.rpm"
+    dest: built/
+    flat: yes

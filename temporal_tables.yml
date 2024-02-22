@@ -1,0 +1,15 @@
+---
+- hosts: all
+  roles:
+  - role: common
+
+- hosts: postgresql
+  become: true
+  roles:
+    - role: postgresql_preconfig
+    - role: geerlingguy.postgresql
+    - role: postgresql_postconfig
+
+- hosts: builders
+  roles:
+  - role: extension_builder

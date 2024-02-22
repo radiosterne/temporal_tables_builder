@@ -1,0 +1,8 @@
+- name: Copy RPM package
+  ansible.builtin.copy:
+    src: built/temporal_tables-1.2.2-1.x86_64.rpm
+    dest: "{{ ansible_user_dir }}"
+
+- name: Install extension
+  ansible.builtin.command: rpm -i -bb {{ ansible_user_dir }}/temporal_tables-1.2.2-1.x86_64.rpm
+  become: true

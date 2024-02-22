@@ -1,0 +1,16 @@
+- name: Upgrade all packages
+  ansible.builtin.yum:
+    name: '*'
+    state: latest
+  become: true
+
+- name: Install nano
+  ansible.builtin.yum:
+    name: nano
+  become: true
+
+- name: Setup ssh
+  import_tasks: ssh.yml
+
+- name: Setup iptables
+  import_tasks: iptables.yml

@@ -1,0 +1,14 @@
+dependencies:
+  - role: commonhandlers
+
+galaxy_info:
+  role_name: postgresql_postconfig
+  author: Radiosterne
+  description: adds user to postgresql and allows it through iptables
+  min_ansible_version: "2.9"
+  license: BSD
+  platforms:
+    - name: EL
+      versions:
+        - "7"
+        - "8"

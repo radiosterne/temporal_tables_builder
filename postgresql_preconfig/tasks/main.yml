@@ -1,0 +1,46 @@
+- name: Install EPEL repo
+  ansible.builtin.yum:
+    name: epel-release
+    state: present
+  become: true
+
+- name: Install software collections
+  ansible.builtin.yum:
+    name: centos-release-scl
+  become: true
+
+- name: Install LLVM
+  ansible.builtin.yum:
+    name: llvm-toolset-7
+  become: true
+
+- name: Install PostgreSQL repository
+  ansible.builtin.yum:
+    name: https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+    state: present
+    disable_gpg_check: true
+  become: true
+
+- name: Ensure postgres users group exists
+  ansible.builtin.group:
+    name: postgres
+    state: present
+  become: true
+
+- name: Ensure postgres user exists
+  ansible.builtin.user:
+    name: postgres
+    group: postgres
+    password: '{{ postgres_user_password | password_hash("md5", postgres_user_salt) }}'
+  become: true
+
+- name: Create postgresql service override directory
+  ansible.builtin.file:
+    path: /etc/systemd/system/{{ postgresql_daemon }}.d
+    state: directory
+    mode: '0755'
+
+- name: Copy postgresql service config override
+  ansible.builtin.template:
+    src: pg_service.j2
+    dest: /etc/systemd/system/{{ postgresql_daemon }}.d/override.conf

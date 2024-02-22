@@ -1,0 +1,14 @@
+dependencies:
+  - role: commonhandlers
+
+galaxy_info:
+  role_name: common
+  author: Radiosterne
+  description: sets up basic iptables and ssh config, prepares further role run
+  min_ansible_version: "2.9"
+  license: BSD
+  platforms:
+    - name: EL
+      versions:
+        - "7"
+        - "8"

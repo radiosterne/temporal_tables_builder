@@ -1,0 +1,8 @@
+---
+collections:
+  - ansible.posix
+  - community.general
+  - community.postgresql
+
+roles:
+  - name: geerlingguy.postgresql

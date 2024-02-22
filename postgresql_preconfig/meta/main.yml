@@ -1,0 +1,14 @@
+dependencies:
+  - role: commonhandlers
+
+galaxy_info:
+  role_name: postgresql_preconfig
+  author: Radiosterne
+  description: configures host for postgresql installation
+  min_ansible_version: "2.9"
+  license: BSD
+  platforms:
+    - name: EL
+      versions:
+        - "7"
+        - "8"

@@ -1,0 +1,17 @@
+- name: Grant privileges to user on db
+  postgresql_privs:
+    db: '{{ postgresql_database_name }}'
+    privs: ALL
+    type: database
+    role: '{{ postgres_sql_username }}'
+  become: true
+  become_user: postgres
+
+- name: Allow 5432 port in iptables (postgresql)
+  ansible.builtin.iptables:
+    chain: INPUT
+    protocol: tcp
+    destination_port: '5432'
+    jump: ACCEPT
+  notify: save iptables
+  become: true
