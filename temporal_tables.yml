@@ -13,3 +13,7 @@
 - hosts: builders
   roles:
   - role: extension_builder
+
+- hosts: test
+  roles:
+  - role: test
